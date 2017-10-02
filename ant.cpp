@@ -1,11 +1,35 @@
 #include <iostream>
-#include <unordered_set>
+#include <map>
+#include <cstring>
 
 using namespace std;
 
+class Storage
+{
+public:
+    int& get(int x, int y);
+    class Accessor
+    {
+        Storage* it;
+        int y;
+    public:
+        Accessor(Storage* it, int y) : it(it), y(y) {}
+        int& operator[](int x)
+        {
+            return it->get(x, y);
+        }
+    };
+    Accessor operator[](int y)
+    {
+        return Accessor(this, y);
+    }
+};
+
+Storage& new_storage();
+
 int main()
 {
-    unordered_set<long long> white_pixels;
+    Storage& stor = new_storage();
     int x = 0;
     int y = 0;
     int dx = 1;
@@ -14,19 +38,17 @@ int main()
     while(true)
     {
         swap(dx, dy);
-        long long key = (((long long)x) << 32) | y;
-        unordered_set<long long>::iterator it = white_pixels.find(key);
-        if(it == white_pixels.end())
+        if(stor[y][x])
         {
             dx = -dx;
-            white_pixels.insert(key);
+            stor[y][x] = 0;
             if(turn % 1000000 == 0)
                 cout << "l[" << x << ", " << y << "] = white" << endl;
         }
         else
         {
             dy = -dy;
-            white_pixels.erase(key);
+            stor[y][x] = 1;
             if(turn % 1000000 == 0)
                 cout << "l[" << x << ", " << y << "] = black" << endl;
         }
