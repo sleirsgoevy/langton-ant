@@ -3,8 +3,8 @@
 
 using namespace std;
 
-#define WIDTH 1000
-#define HEIGHT 1000
+#define WIDTH 500
+#define HEIGHT 500
 
 #define mod(a, b) (((a) % (b) + (b)) % (b))
 #define div(a, b) (((a) - mod(a, b)) / (b))
