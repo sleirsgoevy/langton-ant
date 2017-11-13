@@ -3,3 +3,9 @@ ant_chunks: ant.cpp storage_chunks.cpp
 
 ant_lru: ant.cpp storage_lru.cpp
 	g++ $(CPPFLAGS) -o ant_lru ant.cpp storage_lru.cpp
+
+ant_trie/ant: ant-trie
+	true
+
+ant-trie:
+	cd ant_trie; make ant
