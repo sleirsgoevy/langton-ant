@@ -1,2 +1,2 @@
-ant: ant.cpp trie.cpp
-	g++ $(CPPFLAGS) trie.cpp ant.cpp -o ant
+ant.a: ant.o trie.o
+	ar rcs ant.a ant.o trie.o

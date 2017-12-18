@@ -42,6 +42,26 @@ class Trie
         }
         cur = where;
     }
+    void trie_walk(trie_node* node, int l0, int r0, int u0, int d0, int l, int r, int u, int d, void(*callback)(void*, int, int, int&), void* arg)
+    {
+        if(l0 > r || r0 < l || u0 > d || d0 < u)
+            return;
+        if(r0 == l0 && d0 == u0)
+            callback(arg, l0, u0, *((int*)&node->ul));
+        else
+        {
+            int mx = (l0 + (long long)r0) / 2;
+            int my = (u0 + (long long)d0) / 2;
+            if(node->ul)
+                trie_walk(node->ul, l0, mx, u0, my, l, r, u, d, callback, arg);
+            if(node->ur)
+                trie_walk(node->ur, mx + 1, r0, u0, my, l, r, u, d, callback, arg);
+            if(node->dl)
+                trie_walk(node->dl, l0, mx, my + 1, d0, l, r, u, d, callback, arg);
+            if(node->dr)
+                trie_walk(node->dr, mx + 1, r0, my + 1, d0, l, r, u, d, callback, arg);
+        }
+    }
 public:
     Trie()
     {
@@ -55,6 +75,7 @@ public:
     void left();
     void right();
     int& value();
+    void walk(int, int, int, int, void(*)(void*, int, int, int&), void*);
 };
 
 void Trie::up()
@@ -124,6 +145,14 @@ void Trie::right()
 int& Trie::value()
 {
     return *((int*)&cur->ul);
+}
+
+void Trie::walk(int l, int r, int u, int d, void(*callback)(void*, int, int, int&), void* arg)
+{
+    struct trie_node* node = cur;
+    while(node->parent)
+        node = node->parent;
+    return trie_walk(node, 1 << 31, (1 << 31) - 1, 1 << 31, (1 << 31) - 1, l, r, u, d, callback, arg);
 }
 
 Trie* new_trie()
